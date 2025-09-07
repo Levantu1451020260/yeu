@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bản Cam Kết Tình Yêu</title>
+  <style>
+    :root{
+      --bg:#fff5f8;
+      --card:#ffffff;
+      --accent:#ff356b;
+      --muted:#6b6b6b;
+      --paper:#fffdf6;
+      --shadow: 0 8px 24px rgba(0,0,0,0.08);
+      --radius:14px;
+      --maxw:900px;
+      --padding:26px;
+    }
+    *{box-sizing:border-box}
+    body{
+      font-family: 'Segoe UI', Roboto, 'Noto Sans', Arial;
+      background:linear-gradient(180deg,#fff0f5 0%, #fff5f0 100%);
+      padding:30px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-height:100vh
+    }
+    .wrap{width:100%; max-width:var(--maxw)}
+    .card{
+      background:var(--card);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:var(--padding);
+    }
+    header{
+      display:flex;
+      gap:18px;
+      align-items:center;
+      margin-bottom:18px
+    }
+    .logo{
+      width:76px; height:76px;
+      border-radius:12px;
+      background:linear-gradient(135deg,#ffd1e6, #ff9ab8);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:white;
+      font-weight:800;
+      font-size:20px
+    }
+    h1.title{font-size:20px; margin:0; letter-spacing:1px}
+    p.lead{margin:0; color:var(--muted); font-size:13px}
+    .controls{
+      display:flex;
+      gap:10px;
+      margin-top:12px;
+      flex-wrap:wrap;
+      justify-content: center;
+    }
+    .btn{padding:10px 14px; border-radius:10px; border:0; cursor:pointer; font-weight:600}
+    .btn-primary{background:var(--accent); color:white}
+    .btn-ghost{background:#fff; border:1px solid #eee}
+    .paper{
+      background:var(--paper);
+      padding:22px;
+      border-radius:10px;
+      margin-top:18px;
+    }
+    .center{text-align:center}
+    .seal{font-size:18px; font-weight:800; color:var(--accent); margin-bottom:6px}
+    .motto{color:var(--muted); font-style:italic; margin-bottom:18px}
+    .content{line-height:1.6; color:#222}
+    .content h2{margin-top:10px}
+    label{
+      display:block;
+      font-size:18px;
+      color:var(--muted);
+      font-weight: 500;
+    }
+    input[type=text], textarea, .small-input{
+      padding:10px;
+      border-radius:8px;
+      border:1px dashed pink;
+      background:transparent;
+      width: 70%;
+      margin: 5px;
+    }
+    textarea{min-height:80px}
+    .two-col{
+      display: flex;
+      gap: 14px;
+      margin-top: 8px;
+      flex-wrap: nowrap;
+    }
+    .two-col > div{
+      flex: 1;
+      min-width: 0;
+    }
+    .sig-row{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      margin-top:8px
+    }
+    .sig-box{
+      flex:1;
+      min-height:70px;
+      border-radius:8px;
+      border:1px dashed #ffd6e6;
+      background:white;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      position:relative
+    }
+    .sig-buttons{display:flex; gap:8px}
+    .sig-box[contenteditable="true"] {
+      cursor: text;
+      text-align: center;
+      font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+      font-size: 15px;
+    }
+    .preview{
+      border-top:1px dashed #ffe7ef;
+      margin-top:14px;
+      padding-top:12px
+    }
+    .preview .line{display:flex; justify-content:space-between; gap:8px}
+    .note{font-size:12px; color:var(--muted); margin-top:6px}
+    .heart{font-size:22px; color:var(--accent); margin-left:8px}
+    .add-btn{
+      margin-left:8px;
+      font-weight:bold;
+      cursor:pointer;
+      border:none;
+      background:#ffdee5;
+      border-radius:50%;
+      width:24px;
+      height:24px;
+      color:#ff356b;
+    }
+    .add-btn:hover{background:#ffb6c1;}
+    li[contenteditable="true"]{
+      outline: 1px dashed #ff9ab8;
+      padding:2px 4px;
+      margin:2px 0;
+    }
+    @media(max-width:620px){
+      .two-col{grid-template-columns:1fr}
+      body {padding: 8px;}
+      .wrap {max-width: 100vw;}
+      .card {padding: 12px;}
+      .two-col {grid-template-columns: 1fr; gap: 8px;}
+      header {flex-direction: column; gap: 8px; align-items: flex-start;}
+      .logo {width: 56px; height: 56px; font-size: 16px;}
+      .paper {padding: 10px;}
+      .sig-box {min-height: 70px;}
+    }
+    /* Khi in PDF */
+    @media print {
+      .two-col {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        gap: 14px !important;
+      }
+      .two-col > div {
+        flex: 1;
+        min-width: 0;
+      }
+      .wrap {
+        padding-top: 10px !important;
+        margin-top: 0 !important;
+      }
+    }
+    /* Không cho ngắt trang giữa các clause */
+    .wrap, .clause, .two-col {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+    .dialog-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      animation: fadeOut 0.2s forwards;
+    }
+    .dialog-box {
+      background: white;
+      padding: 20px;
+      border-radius: 14px;
+      text-align: center;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+      transform: scale(0.8);
+      opacity: 0;
+      animation: zoomOut 0.2s forwards;
+    }
+    .dialog-overlay.show {
+      display: flex;
+      animation: fadeIn 0.3s forwards;
+    }
+    .dialog-overlay.show .dialog-box {
+      animation: zoomIn 0.3s forwards;
+    }
+    .dialog-actions {
+      margin-top: 14px;
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+    .dialog-msg {
+      font-size: 13px;
+      color: #666;
+      margin: 6px 0 0;
+    }
+    /* Hiệu ứng keyframes */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes fadeOut {
+      from { opacity: 1; }
+      to { opacity: 0; }
+    }
+    @keyframes zoomIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    @keyframes zoomOut {
+      from { transform: scale(1); opacity: 1; }
+      to { transform: scale(0.8); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div class="controls">
+        <button class="btn btn-primary" id="savePdfBtn">Đồng Ý</button>
+      </div>
+      <p class="note" style="text-align: center;">Lưu ý: cần điền đầy đủ và đọc hết các điều khoản trước khi đồng ý.</p>
+      <section class="paper" id="exportContent">
+        <div class="center">
+          <div class="seal">CỘNG HÒA TÌNH YÊU VĨNH CỬU</div>
+          <h1 class="title">BẢN CAM KẾT TÌNH YÊU</h1>
+          <div class="motto">Ngọt ngào – Chung thủy – Hạnh phúc</div>
+        </div>
+        <div class="content">
+          <p>Hôm nay, ngày <span id="preDay">…</span> tháng <span id="preMonth">…</span> năm <span id="preYear">…</span>, tại trái tim của cả hai, chúng tôi gồm có:</p>
+          <div class="two-col">
+            <div>
+              <h3>Bên A (Nóc Nhà)</h3>
+              <label>Họ và tên: <input type="text" id="nameA" value="Lý Thùy An" readonly /></label>
+              <label>Biệt danh: <input type="text" id="nickA" value="Bé Iu 🥰" readonly /></label>
+            </div>
+            <div>
+              <h3>Bên B (Cột nhà)</h3>
+              <label>Họ và tên: <input type="text" id="nameB" value="Lê Văn Tú" readonly /></label>
+              <label>Biệt danh: <input type="text" id="nickB" placeholder="Cần bé đặt cho" /></label>
+            </div>
+          </div>
+          <h3>Điều khoản</h3>
+          <div id="clauses">
+            <div class="clause">
+              <strong>Điều 1. Lời hứa chung</strong> <button class="add-btn" onclick="addItem(this)">+</button>
+              <ul>
+                <li>Yêu thương nhau vô điều kiện.</li>
+                <li>Không giận quá 24 giờ, nếu giận phải làm lành bằng một cái ôm.</li>
+                <li>Tôn trọng, tin tưởng và luôn nói thật (trừ việc giấu quà bất ngờ).</li>
+              </ul>
+            </div>
+            <div class="clause">
+              <strong>Điều 2. Quyền lợi của đôi bên</strong> <button class="add-btn" onclick="addItem(this)">+</button>
+              <ul>
+                <li>Được yêu thương, quan tâm 24/7.</li>
+                <li>Được quyền làm nũng, hờn dỗi, và được dỗ dành.</li>
+                <li>Được cùng nhau ăn uống, đi chơi, và tạo kỷ niệm đẹp.</li>
+              </ul>
+            </div>
+            <div class="clause">
+              <strong>Điều 3. Nghĩa vụ</strong> <button class="add-btn" onclick="addItem(this)">+</button>
+              <ul>
+                <li>Phải nhắn tin/gọi điện khi nhớ (không được lười).</li>
+                <li>Luôn chăm sóc, lo lắng và động viên nhau.</li>
+                <li>Không được bỏ rơi, không được quên ngày kỷ niệm.</li>
+              </ul>
+            </div>
+            <div class="clause"></div>
+              <strong>Điều 4. Giải quyết mâu thuẫn</strong> <button class="add-btn" onclick="addItem(this)">+</button>
+              <ul>
+                <li>Nếu cãi nhau, người sai phải xin lỗi trước (nếu không biết ai sai thì cả hai cùng xin lỗi).</li>
+                <li>Bất kỳ mâu thuẫn nào cũng phải kết thúc bằng một nụ hôn.</li>
+              </ul>
+            </div>
+            <div class="clause"></div>
+              <strong>Điều 5. Điều khoản bất ngờ</strong> <button class="add-btn" onclick="addItem(this)">+</button>
+              <ul>
+                <li>Bất kỳ lúc nào cũng có thể ôm/làm nũng mà không cần lý do.</li>
+                <li>Phải chấp nhận những trò bất ngờ hoặc prank dễ thương của đối phương.</li>
+              </ul>
+            </div> 
+            <div class="clause">
+              <strong>Điều 6. Thời hạn cam kết</strong> <button class="add-btn" onclick="addItem(this)">+</button>
+              <ul>
+                <li>Hiệu lực: Kể từ ngày ký.</li>
+                <li>Thời gian: Mãi mãi và không bao giờ hết hạn.</li>
+              </ul>
+            </div>
+            <div class="preview"></div>
+            <h3 class="center">ĐẠI DIỆN CÁC BÊN CAM KẾT</h3>
+            <div class="sig-row">
+              <div style="flex:1">
+                  <label style="text-align: center;">Bên A </label>
+                  <div class="sig-box" id="sigA" contenteditable="true"></div>
+              </div>
+              <div style="flex:1">
+                  <label style="text-align: center;">Bên B </label>
+                  <div class="sig-box" id="sigB" contenteditable="true"> Tú </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <div id="confirmDialog" class="dialog-overlay">
+        <div class="dialog-box">
+            <h3>Em đã chắc chắn là đã đọc kỹ rồi chứ ?</h3>
+            <p class="dialog-msg">Đã ký bản cam kết này rồi là phải thực hiện theo đấy nhé !!!</p>
+            <div class="dialog-actions">
+            <button id="confirmYes" class="btn btn-primary">Chắc Chắn</button>
+            <button id="confirmNo" class="btn btn-ghost">Không</button>
+            </div>
+            <p class="note" style="text-align: center;">Lưu xong gửi cho a xem với nhá !!</p>
+        </div>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script>
+    const nameA = document.getElementById('nameA');
+    const nickA = document.getElementById('nickA');
+    const nameB = document.getElementById('nameB');
+    const nickB = document.getElementById('nickB');
+    const sigA = document.getElementById('sigA');
+    const sigB = document.getElementById('sigB');
+    const preDay = document.getElementById('preDay');
+    const preMonth = document.getElementById('preMonth');
+    const preYear = document.getElementById('preYear');
+
+    // Điền ngày hôm nay
+    window.addEventListener('load', ()=>{
+      const d = new Date();
+      preDay.textContent = String(d.getDate()).padStart(2,'0');
+      preMonth.textContent = String(d.getMonth()+1).padStart(2,'0');
+      preYear.textContent = d.getFullYear();
+    });
+
+    // Thêm trái tim khi dblclick
+    sigA.addEventListener('dblclick', ()=> sigA.innerHTML += ' ♥');
+    sigB.addEventListener('dblclick', ()=> sigB.innerHTML += ' ♥');
+
+    // Thêm mục mới
+    function addItem(button){
+      const ul = button.nextElementSibling;
+      const li = document.createElement('li');
+      li.contentEditable = true;
+      li.textContent = '';
+      ul.appendChild(li);
+      li.focus();
+    }
+
+    // Lưu PDF
+    const confirmDialog = document.getElementById('confirmDialog');
+    const confirmYes = document.getElementById('confirmYes');
+    const confirmNo = document.getElementById('confirmNo');
+
+    // Mở dialog (kiểm tra trước khi cho hiển thị)
+    document.getElementById('savePdfBtn').addEventListener('click', ()=>{
+      if(nickB.value.trim() === ""){
+        alert("Bé cần đặt biệt danh cho Bên B trước khi tiếp tục.");
+        nickB.focus();
+        return;
+      }
+      if(sigA.innerText.trim() === ""){
+        alert("Vui lòng xin bé hãy ký tên trước khi tiếp tục.");
+        return;
+      }
+      confirmDialog.classList.add('show');
+    });
+
+    // Đóng dialog
+    confirmNo.addEventListener('click', ()=>{
+      confirmDialog.classList.remove('show');
+    });
+
+    // Xác nhận xuất PDF
+    confirmYes.addEventListener('click', ()=>{
+      confirmDialog.classList.remove('show');
+      const element = document.getElementById('exportContent');
+      const addBtns = element.querySelectorAll('.add-btn');
+      addBtns.forEach(btn => btn.style.display = 'none');
+      html2pdf().set({
+        margin: 10,
+        filename: 'BanCamKetTinhYeu.pdf',
+        image: { type: 'jpeg', quality: 1 },
+        html2canvas: { scale: 3, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: [ 'css', 'legacy'] }
+      }).from(element).outputPdf('blob').then(function(blob){
+        const url = URL.createObjectURL(blob);
+        if(/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream){
+          window.open(url, '_blank');
+        } else {
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'BanCamKetTinhYeu.pdf';
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+        }
+        addBtns.forEach(btn => btn.style.display = '');
+      });
+    });
+  </script>
+</body>
+</html>

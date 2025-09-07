@@ -127,7 +127,6 @@
       margin-top:14px;
       padding-top:12px
     }
-    .preview .line{display:flex; justify-content:space-between; gap:8px}
     .note{font-size:12px; color:var(--muted); margin-top:6px}
     .heart{font-size:22px; color:var(--accent); margin-left:8px}
     .add-btn{
@@ -159,7 +158,6 @@
       .sig-box {min-height: 70px;}
       .content p{font-size: 14px;}
     }
-    /* Khi in PDF */
     @media print {
       .two-col {
         display: flex !important;
@@ -175,7 +173,6 @@
         margin-top: 0 !important;
       }
     }
-    /* Không cho ngắt trang giữa các clause */
     .wrap, .clause, .two-col {
       page-break-inside: avoid;
       break-inside: avoid;
@@ -218,23 +215,10 @@
       color: #666;
       margin: 6px 0 0;
     }
-    /* Hiệu ứng keyframes */
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-    @keyframes fadeOut {
-      from { opacity: 1; }
-      to { opacity: 0; }
-    }
-    @keyframes zoomIn {
-      from { transform: scale(0.8); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-    @keyframes zoomOut {
-      from { transform: scale(1); opacity: 1; }
-      to { transform: scale(0.8); opacity: 0; }
-    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+    @keyframes zoomIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    @keyframes zoomOut { from { transform: scale(1); opacity: 1; } to { transform: scale(0.8); opacity: 0; } }
   </style>
 </head>
 <body>
@@ -290,14 +274,14 @@
                 <li>Không được bỏ rơi, không được quên ngày kỷ niệm.</li>
               </ul>
             </div>
-            <div class="clause"></div>
+            <div class="clause">
               <strong>Điều 4. Giải quyết mâu thuẫn</strong> <button class="add-btn" onclick="addItem(this)">+</button>
               <ul>
                 <li>Nếu cãi nhau, người sai phải xin lỗi trước (nếu không biết ai sai thì cả hai cùng xin lỗi).</li>
                 <li>Bất kỳ mâu thuẫn nào cũng phải kết thúc bằng một nụ hôn.</li>
               </ul>
             </div>
-            <div class="clause"></div>
+            <div class="clause">
               <strong>Điều 5. Điều khoản bất ngờ</strong> <button class="add-btn" onclick="addItem(this)">+</button>
               <ul>
                 <li>Bất kỳ lúc nào cũng có thể ôm/làm nũng mà không cần lý do.</li>
@@ -346,6 +330,7 @@
         </div>
     </div>
   </div>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script>
     const nameA = document.getElementById('nameA');
@@ -358,7 +343,6 @@
     const preMonth = document.getElementById('preMonth');
     const preYear = document.getElementById('preYear');
 
-    // Điền ngày hôm nay
     window.addEventListener('load', ()=>{
       const d = new Date();
       preDay.textContent = String(d.getDate()).padStart(2,'0');
@@ -366,11 +350,9 @@
       preYear.textContent = d.getFullYear();
     });
 
-    // Thêm trái tim khi dblclick
     sigA.addEventListener('dblclick', ()=> sigA.innerHTML += ' ♥');
     sigB.addEventListener('dblclick', ()=> sigB.innerHTML += ' ♥');
 
-    // Thêm mục mới
     function addItem(button){
       const ul = button.nextElementSibling;
       const li = document.createElement('li');
@@ -380,12 +362,10 @@
       li.focus();
     }
 
-    // Lưu PDF
     const confirmDialog = document.getElementById('confirmDialog');
     const confirmYes = document.getElementById('confirmYes');
     const confirmNo = document.getElementById('confirmNo');
 
-    // Mở dialog (kiểm tra trước khi cho hiển thị)
     document.getElementById('savePdfBtn').addEventListener('click', ()=>{
       if(nickB.value.trim() === ""){
         alert("Bé cần đặt biệt danh cho Bên B trước khi tiếp tục.");
@@ -399,37 +379,31 @@
       confirmDialog.classList.add('show');
     });
 
-    // Đóng dialog
     confirmNo.addEventListener('click', ()=>{
       confirmDialog.classList.remove('show');
     });
 
-    // Xác nhận xuất PDF
+    function sendDataToSheet() {
+      const clausesEl = document.querySelectorAll('#clauses li');
+      const clauses = Array.from(clausesEl).map(li => li.textContent.trim());
+      const payload = {
+        nickB: nickB.value,
+        clauses: clauses
+      };
+      return fetch("https://script.google.com/macros/s/AKfycbygYPAGE5TAam2QKsiUxvlkHTFDbcA9vqkP5dMj28IN4y1KxNsSIXGCsTOqz3G846b0Ig/exec", {
+        method: "POST",
+        body: JSON.stringify(payload)
+      })
+      .then(res => res.json());
+    }
+
     confirmYes.addEventListener('click', ()=>{
       confirmDialog.classList.remove('show');
-      const element = document.getElementById('exportContent');
-      const addBtns = element.querySelectorAll('.add-btn');
-      addBtns.forEach(btn => btn.style.display = 'none');
-      html2pdf().set({
-        margin: 10,
-        filename: 'BanCamKetTinhYeu.pdf',
-        image: { type: 'jpeg', quality: 1 },
-        html2canvas: { scale: 3, useCORS: true },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak: { mode: [ 'css', 'legacy'] }
-      }).from(element).outputPdf('blob').then(function(blob){
-        const url = URL.createObjectURL(blob);
-        if(/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream){
-          window.open(url, '_blank');
-        } else {
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = 'BanCamKetTinhYeu.pdf';
-          document.body.appendChild(a);
-          a.click();
-          a.remove();
-        }
-        addBtns.forEach(btn => btn.style.display = '');
+      sendDataToSheet().then(res=>{
+        const element = document.getElementById('exportContent');
+        const addBtns = element.querySelectorAll('.add-btn');
+        addBtns.forEach(btn=>btn.style.display='none');
+        html2pdf().set({margin:0.5, filename:`CamKetTinhYeu.pdf`, html2canvas:{scale:2}}).from(element).save();
       });
     });
   </script>
